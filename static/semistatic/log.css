@@ -1,0 +1,366 @@
+img.avatar { float: left; margin-right: 10px; margin-left: -50px; }
+img.avtext { vertical-align: middle; width: 40px; height: 40px; margin: 5px }
+div.logline { margin-left: 50px;}
+div.selfname { display: inline-block; margin-left: 10px; vertical-align: middle }
+a.games { color: blue; font-size: 84%; }
+div.vspacer { padding-top: 5px; }
+
+input.default { color: #999; }
+a.whatsthis { margin-left: 3ex; font-size: x-small }
+hr.autosep { border: 0px solid white; }
+table#player_table { border: none }
+table#player_table td { vertical-align: top; text-align: left; padding-top: 6px }
+div.automatch { vertical-align: middle;
+		padding-top: 10px; margin-top: 10px;
+		padding-bottom: 20px; margin-bottom: 10px;
+		border-bottom: 2px solid #ccc;
+	        border-top: 2px solid #ccc }
+div.automatch input { margin-left: 20px; }
+div.automatch span.label { margin-left: 20px; }
+input.optfeature { margin-left: 30px; margin-right: 1ex; }
+input.optfeature2 { margin-right: 1ex; }
+.player_td { width: 250px; overflow: hidden }
+.pstat { padding-left: 0.8em; color: #69c }
+.pstat b { color: #369 }
+.mystat { color: #396 }
+.mystat b { color: #063 }
+
+.hright { text-align: right; }
+.hleft { text-align: left; }
+.hcenter { text-align: center; }
+.hrightfixed1 { text-align: right; width: 6em; }
+.hrightfixed2 { text-align: right; width: 8em; }
+.hleftfixed { text-align: left; width:4em; }
+
+div.vertical { display: inline-block; margin-left: 3px; margin-right: 3px; vertical-align: middle; text-align: center; min-width: 3em }
+div.buttons { float: right; }
+
+#game { display: none }
+
+#game #left { position: fixed; left: 0px; width: 140px; bottom: 0px;
+	      height: 100%; margin: 0; }
+
+#game #supply { padding-bottom: 5px; padding-left: 5px;
+		position: fixed; bottom: 0px; width: 140px;
+		line-height: 1.5em }
+#game #supply .achage { margin: 0; }
+#supply #buttons { margin: 20px 10px; }
+
+#game #dogmas { display: none;
+		font-size: 84%; position: absolute; z-index: 100;
+	        background-color: white;
+		border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;
+	        padding: 5px; top: 0px; left: 0px; width: 132px; }
+#game #dogmas div.effect { color: #666666; margin: 2px; padding: 2px; border: 2px solid white }
+#game #dogmas div.effect.current { color: black; background-color: #f0f0f0;
+				   border: 2px solid #d00 }
+#game #dogmas #dogmatitle { text-align: center; font-weight: bold; color: black; }
+
+
+
+#game .right { margin-left: 140px; }
+
+img#sound_toggle { vertical-align: middle; margin: 0px 10px; }
+#above_choices { clear: both; font-size: 84%; margin: 10px 0px; padding-top: 10px }
+#choices { margin: 10px 0px; clear: both }
+
+input#entry { width: 300px; }
+
+hr.cardgroup { margin: 2ex 4ex 1ex 4ex; visibility: hidden; }
+.costcell { display: inline-block; margin-top: 4px; vertical-align: middle; margin-right: 8px; min-width: 5ex; }
+.costcell b { font-weight: bold; font-size: large; }
+
+div.hovercard { display: block;
+		border-top: 1px solid #999;
+		border-left: 1px solid #999;
+		border-bottom: 2px solid #333;
+		border-right: 2px solid #333;
+		background: white;
+		vertical-align: top;
+		}
+
+/* innovation stuff */
+
+#hand { margin-top: 4px; }
+
+.age { background-color: black; color: white; padding: 0px 0.5ex; border: 1px solid black }
+
+
+.age0 { background-color: #bba37a; color: white; padding: 0px 0.5ex;
+	border-left: 1px solid #c8b594; border-top: 1px solid #c8b594;
+	border-right: 1px solid #958261; border-bottom: 1px solid #958261; }
+.age.b { background-color: #bba37a; color: white; padding: 0px 0.4ex;
+	border-left: 1px solid #c8b594; border-top: 1px solid #c8b594;
+	border-right: 1px solid #958261; border-bottom: 1px solid #958261; }
+
+.age1 { background-color: #6889ec; color: white; padding: 0px 0.5ex;
+	border-left: 1px solid #95acf1; border-top: 1px solid #95acf1;
+	border-right: 1px solid #3e528d; border-bottom: 1px solid #3e528d; }
+.age.e { background-color: #6889ec; color: white; padding: 0px 0.4ex;
+	border-left: 1px solid #95acf1; border-top: 1px solid #95acf1;
+	border-right: 1px solid #3e528d; border-bottom: 1px solid #3e528d; }
+
+.achinfo { color: #bba37a; }
+.achinfo.a { font-size: 84%; }
+.achinfo.b { font-weight: bold; }
+span.card { padding: 0px 0.5ex; font-weight: bold }
+.b-red { background-color: #f5a2a2; color: black; background-image: url('/static/symbols/bg-red.png'); }
+.b-green { background-color: #baeaa4; color: black; background-image: url('/static/symbols/bg-green.png'); }
+.b-yellow { background-color: #f9ffb9; color: black }
+.b-blue { background-color: #c8e4ff; color: black; background-image: url('/static/symbols/bg-blue.png'); }
+.b-purple { background-color: #decafa; color: black; background-image: url('/static/symbols/bg-purple.png'); }
+a.cardname { display: inline-block; float: right; margin-top: 2px }
+table.board { border-spacing: 16px 4px; }
+
+div.column { float: left; vertical-align: top }
+
+img.cornerwarn { position: absolute; right: 0px; bottom: 0px; z-index: 100; visibility: hidden }
+.cardblock.clickable:hover img.cornerwarn { visibility: visible }
+
+.cardblock.clickable:hover { cursor: pointer; border: 1px solid black }
+
+.cardblock { width: 180px; padding: 2px; vertical-align: top; text-align: left;
+	     position: relative; margin: 5px }
+#opponent_boards .cardblock { margin: 3px 5px }
+.cardblock.b-red { border: 1px outset #eb4545 }
+.cardblock.b-green { border: 1px outset #75d448 }
+.cardblock.b-yellow { border: 1px outset #f3ff73 }
+.cardblock.b-blue { border: 1px outset #7eb8ee }
+.cardblock.b-purple { border: 1px outset #bd94f5 }
+img.array { padding-right: 2px; padding-bottom: 2px; vertical-align: middle }
+img.smallarray { margin: 0px 2px; vertical-align: middle }
+.cardblock img.symbol { padding-left: 15px; padding-right: 2px; padding-bottom: 2px;
+			vertical-align: middle }
+.cardblock img.splay { padding-right: 2px; padding-bottom: 2px;
+		       vertical-align: middle }
+.cardblock p { font-size: 84%; margin: 2px; padding-left: 16px; text-indent: -16px }
+.cardblock p.echo { font-size: 84%; margin: 2px; padding-left: 0px; text-indent: 0px }
+
+.specialblock { width: 160px; padding: 2px; text-align: left;
+		background-color: #bba37a; color: black; }
+.specialblock p.specialname { text-align: center; margin: 2px; color: white; font-weight: bold }
+.specialblock p.specialtext { font-size: 84%; margin: 2px; }
+
+.hovercard div.cardblock { margin: 0px; }
+
+span.nowrap { white-space: nowrap }
+
+.infocard { margin: 10px; display: inline-block; }
+
+div.opp0 { background-color: #f0f0f0; overflow: auto; margin-bottom: 2px;
+	   padding-left: 5px; border-left: 5px solid white;
+	   padding-bottom: 4px; border-bottom: 1px solid #ccc }
+div.opp1 { background-color: #f8f8f8; overflow: auto; margin-bottom: 2px;
+	   padding-left: 5px; border-left: 5px solid white;
+	   padding-bottom: 4px; border-bottom: 1px solid #ccc }
+span.extra { float: right; font-weight: bold }
+div.clear { clear: both; padding: 0px; margin: 0px; }
+
+div#local_player { border-left: 5px solid white; padding-left: 5px; }
+
+div.hand { overflow: auto; }
+
+div.icons { float: right }
+div.icons img { margin-left: 2px; }
+
+#iconcounts { border-spacing: 1px; border-collapse: collapse; border-color: white; margin-bottom: 15px }
+#iconcounts img { margin: 0px; }
+#iconcounts td { text-align: center; font-weight: bold; padding: 0px }
+#iconcounts td.iconname { text-align: left; }
+
+.iconcount { width: 20px; font-weight: bold; color: white; display: inline-block; text-align: center;
+	   margin-left: 2px; }
+.ic_castle { background-color: #414648; color: #b6bcc6 }
+.ic_lightbulb { background-color: #6a214c; color: #ffffff }
+.ic_clock { background-color: #005385; color: #6ebbe1 }
+.ic_leaf { background-color: #2a5d46; color: #a1cec0 }
+.ic_factory { background-color: #6e1b14; color: #d04e48 }
+.ic_crown { background-color: #a47b37; color: #f2e084 }
+div.emptybox { margin-bottom: 5px; }
+
+span.name { font-weight: bold }
+span.label { margin-left: 2ex }
+#buttonbar span.label { font-weight: bold }
+#buttonbar span.secondary { color: #999 }
+
+/* old stuff */
+
+
+
+#temp_say { color: #36f; font-style: italic; margin-left: 50px; }
+.em { font-weight: bold; color: #c00; font-size: 150% }
+.gameover { padding: 3em; }
+.confirm { font-weight: bold; color: #c00 }
+.price { text-align: right; padding-right: 1ex }
+
+span.discards { background-color: #888; padding: 0; margin: 0; }
+
+span.choiceitem { display: inline-block; }
+span.reorder { display: inline-block; }
+
+.choice { color: #00c; padding-left: 3ex; display: inline-block; }
+a { text-decoration: none }
+a.choice:hover { color: red; cursor: pointer }
+a.play:hover { color: red; cursor: pointer }
+a.buy:hover { color: red; cursor: pointer }
+a.buy { font-weight: bold }
+.morechoice { color: #333; padding-left: 3ex; display: inline-block; }
+
+.choice2 { margin-left: 1ex }
+span.disabled label { color: #999 }
+.txcardname { min-width: 23ex }
+.avail { padding-right: 3ex }
+
+div.holder { padding-top: 2em }
+
+.source { visibility: hidden }
+.pos-marker { line-height: 2em;
+	      display: inline-block;
+	      text-align: center;
+	      font-size: 200%;
+	      font-weight: bold;
+	      visibility: hidden }
+.exch-marker { font-size: 120%; font-weight: bold; padding: 0px 10px;
+	       cursor: pointer }
+
+span.stash-card { background-color: #888; padding: 0 3px 0 0; margin: 0 3px; }
+.stash-pos-marker { line-height: 2em;
+		    display: inline-block;
+		    text-align: center;
+		    font-size: 200%;
+		    font-weight: bold;
+		    color: red;
+		    margin: -6px -2px;
+		    vertical-align: middle;
+		    visibility: hidden;
+		  }
+
+.drag { opacity: .6 }
+
+.important { font-size: 150% }
+td.hand { padding-top: 8px; }
+
+
+div.black { height: 100%;
+	    width: 100%;
+	    left: 0px;
+	    top: 0px;
+	    position: fixed;
+	    }
+
+pre { white-space: pre-wrap; word-wrap: break-word; }
+
+div.info { border: 1px solid black;
+	   background-color: white;
+	   opacity: 1.0;
+	   margin: auto;
+	   padding: 2em 2em 0 2em;
+	   position: fixed;
+
+	   width: 80%;
+	   text-align: center;
+	   height: 80%;
+	   overflow: auto;
+	   left: 0;
+	   right: 0;
+	   bottom: 0;
+	   top: 0;
+
+	   word-wrap: break-word;
+	   }
+
+div.infoinfo { text-align: left; }
+
+div.info h1 { font-size: 150%; padding: 0; margin: 0; }
+div.info h1.lefttitle { text-align: left; margin-bottom: 20px; }
+
+.dismiss { text-align: center; font-style: italic; color: #999 }
+
+img.info-button { padding-left: 0.5em;
+		  padding-right: 1em;
+		  padding-top: 3px;
+		  margin: auto 0;
+		}
+
+table, tr, tbody, td { border: none }
+body, pre { font-family: sans-serif; font-size: 13px; }
+body { cursor: default; padding: 5px; }
+
+table.constr {
+    padding: 1ex;
+    }
+
+div.fail {
+    height: 100%;
+    width: 100%;
+    opacity: 0.8;
+    left: 0px;
+    top: 0px;
+    position: fixed;
+    background-color: black;
+    color: #c00;
+    font-size: xx-large;
+    text-align: center;
+    padding: 10% 0;
+    z-index: 2000;
+}
+
+.logonly { font-style: italic }
+.announce { color: #c00; font-weight: bold }
+.announce a { color: #c00; text-decoration: underline }
+.activity { color: #999 }
+
+span.seeker { display: inline-block; width: 5ex; padding-right: 3px;
+	      text-align: center; color: #009; font-size: 84%; font-weight: bold; }
+span.infoseek { color: #8E388E; font-size: 84%; font-weight: bold; }
+span.marker { display: inline-block; width: 5ex; padding-right: 3px;
+	      text-align: right; color: #c00; }
+span.imarker { color: #c00; }
+span.rank { font-size: 84%; font-weight: bold; }
+
+table.info { border: none; border-collapse: collapse; }
+table.info td { padding-right: 3em; }
+table.info th { padding-right: 3em; background-color: #eee; }
+table.info td.lb { text-align: center;
+		   background-color: #f8f8f8;
+		   font-weight: bold; }
+#motd { color: #c00; font-weight: bold; padding: 0 1ex 1ex 1ex; }
+
+table.listing th { padding: 2px 5ex; }
+table.listing td.r { text-align: right; padding: 0 }
+
+table.listgame th { font-weight: normal; padding: 0 1ex; vertical-align: bottom }
+table.listgame td.c { text-align: center; }
+table.listgame td.b { font-weight: bold; }
+table.listgame td.sm { color: #666; }
+
+body.log { line-height: 20px; }
+img.splay { vertical-align: middle; }
+pre#log { margin-bottom: 2em; line-height: 20px; min-height: 300px }
+
+div.lobby { float: right; padding: 5px; }
+div.lobby b { font-size: 120%; }
+
+.fan { font-style: italic; color: #c00 }
+
+body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    }
+
+pre#chat { height: 110px; overflow: auto; margin: 2px }
+pre#chat .name { color: #999 }
+
+div#opponent_boards { clear: both; }
+div#chatparent { position: fixed; top: 0px; right: 0px;
+		 width: 500px;
+		 height: 140px;
+		 background-color: white;
+		 z-index: 1001;
+		 }
+
+div#header div.lobby { margin-right: 520px }
