@@ -3,11 +3,11 @@ exec(compile(open(activate_this).read(), activate_this, 'exec'), dict(__file__=a
 import sys
 
 def application(environ, start_response):
-    output = 'Welcome to your mod_wsgi website! It uses:\n\nPython %s' % sys.version
+    output = '<html>Not ready yet! Go help on <a href="http://github.com/rspeer/scorepile">GitHub</a>.</html>'
 
     response_headers = [
         ('Content-Length', str(len(output))),
-        ('Content-Type', 'text/plain'),
+        ('Content-Type', 'text/html'),
     ]
 
     start_response('200 OK', response_headers)
