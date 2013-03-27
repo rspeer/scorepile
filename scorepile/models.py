@@ -45,6 +45,12 @@ class Player(Base, DataMixin):
     games = relationship('GamePlayer', order_by='desc(GamePlayer.id)',
                          backref='player')
 
+    @staticmethod
+    def from_parse_data(parsed):
+        return Player(
+            name=parsed['name'],
+            iso_id=parsed['iso_id']
+        )
 
 class GamePlayer(Base, DataMixin):
     """
@@ -74,6 +80,18 @@ class GamePlayer(Base, DataMixin):
     # Did this player win this game?
     winner = Column(Boolean)
 
+    @staticmethod
+    def from_parse_data(parsed, player_index):
+        # Doesn't link to players yet; we'd have to look them up in a session
+        info = parsed['players'][player_index]
+        return GamePlayer(
+            game_id=parsed['game_id'],
+            player_index=player_index,
+            winner=info['winner']
+            name=info['name'],
+            data=info['data']
+        )
+
 class Game(Base, DataMixin):
     __tablename__ = 'games'
     id = Column(Integer, primary_key=True)
@@ -87,11 +105,19 @@ class Game(Base, DataMixin):
     # When was the game played?
     timestamp = Column(DateTime, index=True)
     
-    # How did the game end?
-    win_condition = Column(String)
-
     # A one-to-many list of players in the game and information about them,
     # using GamePlayer objects.
     players = relationship('GamePlayer', order_by='player_index',
                            backref='game')
+
+    @staticmethod
+    def from_parse_data(parsed):
+        return Game(
+            id = parsed['game_id'],
+            nplayers = parsed['nplayers']
+            url = parsed['url'],
+            timestamp = parsed['timestamp'],
+            data = {'win_condition': parsed['win_condition']}
+        )
+
 
