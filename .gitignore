@@ -4,3 +4,5 @@ data/innovation.isotropic.org
 *.egg-info/
 *.swp
 *~
+db_config.py
+__pycache__
