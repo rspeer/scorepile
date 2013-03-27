@@ -81,6 +81,9 @@ class Game(Base, DataMixin):
     # How many players were in the game?
     nplayers = Column(Integer)
 
+    # What's the relative URL of the game log?
+    url = Column(String)
+
     # When was the game played?
     timestamp = Column(DateTime, index=True)
     

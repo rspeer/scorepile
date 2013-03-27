@@ -1,10 +1,16 @@
 from bs4 import BeautifulSoup
 from bs4.element import Tag, NavigableString
+import pytz
 import re
+import time
+from datetime import datetime
 from pprint import pprint
 
 # Enumerate some states
 (START, NEXT_PLAYER, HAND, ACHIEVE, SCORE, ICONS, DONE) = range(7)
+
+# Isotropic does everything in Pacific time; let's do the same
+PT = pytz.timezone('US/Pacific')
 
 def close_images(line):
     "Work around an html.parser bug."
@@ -20,6 +26,7 @@ class GameParser:
     `GameParser.parse_file()`, which takes in a filename, creates a
     GameParser, and returns the result of parsing that file.
     """
+
     def __init__(self):
         self.state = START
         self.game_id = None
@@ -31,9 +38,24 @@ class GameParser:
     @staticmethod
     def parse_file(filename):
         parser = GameParser()
-        return parser.handle_stream(open(filename))
+        return parser.handle_file(filename)
 
-    def handle_stream(self, file):
+    @staticmethod
+    def parse_time(timestr):
+        stime = time.strptime(timestr, '%Y%m%d-%H%M%S')
+        timestamp = datetime.fromtimestamp(time.mktime(stime), PT)
+        return timestamp
+
+    def handle_file(self, filename):
+        file = open(filename)
+        _before, sep, after = filename.partition('/gamelog/')
+        url = sep + after
+
+        # Extract the game's timestamp from the URL.
+        timestr = '-'.join(url.split('-')[1:3])
+        timestamp = GameParser.parse_time(timestr)
+
+
         for line in file:
             line = line.strip()
             if line:
@@ -43,7 +65,9 @@ class GameParser:
                     'game_id': self.game_id,
                     'win_condition': self.win_condition,
                     'nplayers': len(self.players),
-                    'players': self.players
+                    'players': self.players,
+                    'url': url,
+                    'timestamp': timestamp
                 }
 
     def handle_line(self, line):
