@@ -51,6 +51,15 @@ class Player(Base, DataMixin):
             name=parsed['name'],
             iso_id=parsed['iso_id']
         )
+            
+    @staticmethod
+    def get_by_iso_id(iso_id, session):
+        if iso_id is None:
+            return None
+
+        found = session.query(Player).filter(Player.iso_id == iso_id).one()
+        return found
+
 
 class GamePlayer(Base, DataMixin):
     """
@@ -81,16 +90,19 @@ class GamePlayer(Base, DataMixin):
     winner = Column(Boolean)
 
     @staticmethod
-    def from_parse_data(parsed, player_index):
-        # Doesn't link to players yet; we'd have to look them up in a session
+    def from_parse_data(parsed, player_index, player_obj):
         info = parsed['players'][player_index]
-        return GamePlayer(
+        gp = GamePlayer(
             game_id=parsed['game_id'],
             player_index=player_index,
             winner=info['winner']
-            name=info['name'],
-            data=info['data']
+            name=info['name']
         )
+        gp.data = info['data']
+        if player_obj is not None:
+            gp.player = player_obj
+        return gp
+
 
 class Game(Base, DataMixin):
     __tablename__ = 'games'
@@ -112,12 +124,30 @@ class Game(Base, DataMixin):
 
     @staticmethod
     def from_parse_data(parsed):
-        return Game(
-            id = parsed['game_id'],
-            nplayers = parsed['nplayers']
-            url = parsed['url'],
-            timestamp = parsed['timestamp'],
-            data = {'win_condition': parsed['win_condition']}
+        game = Game(
+            id=parsed['game_id'],
+            nplayers=parsed['nplayers']
+            url=parsed['url'],
+            timestamp=parsed['timestamp']
         )
+        game.data = {'win_condition': parsed['win_condition']}
+        return game
 
+    @staticmethod
+    def create(parsed, session, commit=True):
+        game = Game.from_parse_data(parsed)
+        session.add(game)
+
+        for idx, playerdata in parsed['players'].items():
+            if playerdata['iso_id']:
+                player = Player.get_by_iso_id(playerdata['iso_id'], session)
+                if player is None:
+                    player = Player.from_parse_data(playerdata)
+            session.add(player)
+
+            gp = GamePlayer.from_parse_data(playerdata, idx, player)
+            session.add(gp)
+
+        if commit:
+            session.commit()
 
