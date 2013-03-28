@@ -3,7 +3,10 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import (Column, String, Integer, Boolean, DateTime,
                         ForeignKey, desc)
 import json
+import logging
 
+logging.basicConfig(level=logging.INFO)
+LOG = logging.getLogger(__name__)
 Base = declarative_base()
 
 
@@ -51,7 +54,7 @@ class Player(Base, DataMixin):
             name=parsed['name'],
             iso_id=parsed['iso_id']
         )
-            
+
     @staticmethod
     def get_by_iso_id(iso_id, session):
         if iso_id is None:
@@ -59,6 +62,9 @@ class Player(Base, DataMixin):
 
         found = session.query(Player).filter(Player.iso_id == iso_id).one()
         return found
+
+    def __repr__(self):
+        return '<Player: {0} (#{1})>'.format(self.name, self.id)
 
 
 class GamePlayer(Base, DataMixin):
@@ -103,6 +109,9 @@ class GamePlayer(Base, DataMixin):
             gp.player = player_obj
         return gp
 
+    def __repr__(self):
+        return '<GamePlayer #{}: {} in game #{})>'.format(self.id, self.name, self.game_id)
+
 
 class Game(Base, DataMixin):
     __tablename__ = 'games'
@@ -122,6 +131,9 @@ class Game(Base, DataMixin):
     players = relationship('GamePlayer', order_by='player_index',
                            backref='game')
 
+    def __repr__(self):
+        return '<Game #{}>'.format(self.id)
+
     @staticmethod
     def from_parse_data(parsed):
         game = Game(
@@ -137,6 +149,7 @@ class Game(Base, DataMixin):
     def create(parsed, session, commit=True):
         game = Game.from_parse_data(parsed)
         session.add(game)
+        LOG.info("Added {}".format(game))
 
         for idx, playerdata in parsed['players'].items():
             if playerdata['iso_id']:
@@ -144,10 +157,13 @@ class Game(Base, DataMixin):
                 if player is None:
                     player = Player.from_parse_data(playerdata)
             session.add(player)
+            LOG.info("Added {}".format(player))
 
             gp = GamePlayer.from_parse_data(playerdata, idx, player)
             session.add(gp)
+            LOG.info("Added {}".format(gp))
 
         if commit:
             session.commit()
+            LOG.info("Committed.\n")
 
