@@ -101,7 +101,7 @@ class GamePlayer(Base, DataMixin):
         gp = GamePlayer(
             game_id=parsed['game_id'],
             player_index=player_index,
-            winner=info['winner']
+            winner=info['winner'],
             name=info['name']
         )
         gp.data = info['data']
@@ -138,7 +138,7 @@ class Game(Base, DataMixin):
     def from_parse_data(parsed):
         game = Game(
             id=parsed['game_id'],
-            nplayers=parsed['nplayers']
+            nplayers=parsed['nplayers'],
             url=parsed['url'],
             timestamp=parsed['timestamp']
         )
