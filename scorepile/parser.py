@@ -34,6 +34,7 @@ class GameParser:
         self.winner_keys = []
         self.players = {}
         self.cur_player = None
+        self.cardset = 'base'
 
     @staticmethod
     def parse_file(filename):
@@ -67,7 +68,8 @@ class GameParser:
                     'nplayers': len(self.players),
                     'players': self.players,
                     'url': url,
-                    'timestamp': timestamp
+                    'timestamp': timestamp,
+                    'cardset': self.cardset
                 }
 
     def handle_line(self, line):
@@ -98,7 +100,7 @@ class GameParser:
                 # Set up an object with basic information about the player.
                 player = tree.find('span')
                 key = player['class'][0]
-                iso_id = player['id']
+                iso_id = player.get('id')
                 name = player.string
                 pstate = make_player_state(name, iso_id)
                 
@@ -112,6 +114,9 @@ class GameParser:
 
             elif self.state == HAND:
                 # Get the contents of the player's initial hand.
+                if 'age e' in line:
+                    self.cardset = 'echoes'
+
                 cards = tree.find_all('span', class_='card')
                 card_names = [card.string for card in cards]
                 self.cur_player['data']['cards'] = card_names
@@ -127,7 +132,7 @@ class GameParser:
             elif self.state == SCORE:
                 # Get the player's final score.
                 score_text = tree.find('b').string
-                self.cur_player['data']['score'] = int(score_text[1:-1])
+                self.cur_player['data']['score'] = int(float(score_text[1:-1]))
                 self.state = ICONS
 
             elif self.state == ICONS:
