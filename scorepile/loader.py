@@ -9,7 +9,7 @@ from .models import Game
 def load_game(filename):
     parsed = GameParser.parse_file(filename)
     session = Session()
-    game = Game.create(parsed, session)
+    game = Game.create(session, parsed)
 
 def load_dir(path):
     path = path.rstrip('/')

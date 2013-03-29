@@ -1,10 +1,11 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, joinedload
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import (Column, String, Integer, Boolean, DateTime,
                         ForeignKey, desc)
 import json
 import logging
+from . import dateutils
 
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger(__name__)
@@ -60,7 +61,7 @@ class Player(Base, DataMixin):
         )
 
     @staticmethod
-    def get_by_iso_id(iso_id, session):
+    def get_by_iso_id(session, iso_id):
         if iso_id is None:
             return None
 
@@ -71,7 +72,7 @@ class Player(Base, DataMixin):
             return None
 
     def __repr__(self):
-        return '<Player: {0} ({1})>'.format(self.name, self.iso_id)
+        return '<Player: {0}>'.format(self.name, self.iso_id)
 
 
 class GamePlayer(Base, DataMixin):
@@ -146,15 +147,31 @@ class Game(Base, DataMixin):
     jsondata = Column(String, default='{}')
     
     def __repr__(self):
-        return '<Game #{}>'.format(self.id)
+        players = self.players
+        if players:
+            return '<Game #{}: {}>'.format(self.id, players)
+        else:
+            return '<Game #{}>'.format(self.id)
 
     @staticmethod
-    def get(id, session):
+    def get(session, id):
         try:
             found = session.query(Game).filter(Game.id == id).one()
             return found
         except NoResultFound:
             return None
+
+    @staticmethod
+    def games_on_day(session, timestamp):
+        day_start = dateutils.midnight_before(timestamp)
+        day_end = dateutils.midnight_after(timestamp)
+        results = (session.query(Game)
+                          .options(joinedload(Game.players))
+                          .filter(Game.timestamp >= day_start)
+                          .filter(Game.timestamp < day_end)
+                          .filter(Game.nplayers >= 2)
+                          .order_by(Game.timestamp))
+        return results
 
     @staticmethod
     def from_parse_data(parsed):
@@ -169,8 +186,8 @@ class Game(Base, DataMixin):
         return game
 
     @staticmethod
-    def create(parsed, session, commit=True):
-        existing = Game.get(parsed['game_id'], session)
+    def create(session, parsed, commit=True):
+        existing = Game.get(session, parsed['game_id'])
         if existing:
             game = existing
             LOG.warn('Found existing {}'.format(game))
@@ -180,7 +197,7 @@ class Game(Base, DataMixin):
         players = []
         for idx, playerdata in parsed['players'].items():
             if playerdata['iso_id']:
-                player = Player.get_by_iso_id(playerdata['iso_id'], session)
+                player = Player.get_by_iso_id(session, playerdata['iso_id'])
                 if player is None:
                     player = Player.from_parse_data(playerdata)
                 session.add(player)
