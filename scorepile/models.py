@@ -71,6 +71,27 @@ class Player(Base, DataMixin):
         except NoResultFound:
             return None
 
+    @staticmethod
+    def get_by_name(session, name):
+        try:
+            found = session.query(Player).filter(Player.name == name).one()
+            return found
+        except NoResultFound:
+            return None
+
+    def played_games(self, session, day=None):
+        played = (session.query(GamePlayer)
+                         .join(GamePlayer.game)
+                         .filter(GamePlayer.player == self)
+                         .filter(Game.nplayers >= 2)
+                         .order_by(desc(Game.timestamp)))
+        if day is not None:
+            day_start = dateutils.midnight_before(day)
+            day_end = dateutils.midnight_after(day)
+            played = (played.filter(Game.timestamp >= day_start)
+                            .filter(Game.timestamp < day_end))
+        return [item.game for item in played]
+    
     def __repr__(self):
         return '<Player: {0}>'.format(self.name, self.iso_id)
 
@@ -141,11 +162,19 @@ class Game(Base, DataMixin):
     
     # A one-to-many list of players in the game and information about them,
     # using GamePlayer objects.
-    players = relationship('GamePlayer', order_by=GamePlayer.player_index,
+    players = relationship('GamePlayer',
+                           order_by=(desc(GamePlayer.winner),
+                                     GamePlayer.player_index),
                            backref='game', cascade='all, delete-orphan')
 
     jsondata = Column(String, default='{}')
+
+    def winners(self):
+        return [player for player in self.players if player.winner == True]
     
+    def losers(self):
+        return [player for player in self.players if player.loser == True]
+
     def __repr__(self):
         players = self.players
         if players:
