@@ -5,9 +5,7 @@
 {% block content %}
     <ul class="gamelist">
     {% for game in games %}
-        <li class="game">
-           <a href="{{ game.url }}">Game #{{ game.id }}</a> 
-        </li>
+        {{ game.html()|safe }}
     {% endfor %}
     </ul>
 {% endblock content %}

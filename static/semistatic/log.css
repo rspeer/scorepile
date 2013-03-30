@@ -343,15 +343,6 @@ div.lobby b { font-size: 120%; }
 
 .fan { font-style: italic; color: #c00 }
 
-body {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    }
-
 pre#chat { height: 110px; overflow: auto; margin: 2px }
 pre#chat .name { color: #999 }
 

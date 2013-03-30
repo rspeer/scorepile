@@ -6,6 +6,7 @@ from sqlalchemy import (Column, String, Integer, Boolean, DateTime,
 import json
 import logging
 from . import dateutils
+from jinja2 import Template
 
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger(__name__)
@@ -95,6 +96,14 @@ class Player(Base, DataMixin):
     def __repr__(self):
         return '<Player: {0}>'.format(self.name, self.iso_id)
 
+    def html(self):
+        template = Template(
+            '<a href="/player/id/{{ player.id }}" class="player">'
+            '{{ player.name }}'
+            '</a>'
+        )
+        return template.render(player=self)
+
 
 class GamePlayer(Base, DataMixin):
     """
@@ -143,6 +152,19 @@ class GamePlayer(Base, DataMixin):
     def __repr__(self):
         return '<GamePlayer: {} in game #{})>'.format(self.player_name, self.game_id)
 
+    def html(self):
+        if self.player_id:
+            template = Template(
+                '<a href="/player/id/{{ gplayer.player_id }}" class="reg player">'
+                '{{ gplayer.player_name }}'
+                '</a>'
+            )
+        else:
+            template = Template(
+                '<span class="unreg player">{{ gplayer.player_name }}</span>'
+            )
+        return template.render(gplayer=self)
+
 
 class Game(Base, DataMixin):
     __tablename__ = 'games'
@@ -173,7 +195,7 @@ class Game(Base, DataMixin):
         return [player for player in self.players if player.winner == True]
     
     def losers(self):
-        return [player for player in self.players if player.loser == True]
+        return [player for player in self.players if player.winner == False]
 
     def __repr__(self):
         players = self.players
@@ -244,6 +266,22 @@ class Game(Base, DataMixin):
         if commit:
             session.commit()
             LOG.info("Committed.\n")
+
+    def html(self):
+        winnerdesc = ', '.join(p.html() for p in self.winners())
+        loserdesc = ', '.join(p.html() for p in self.losers())
+        if len(self.losers()) == 0:
+            playerdesc = ' = '.join(p.html() for p in self.players)
+        else:
+            playerdesc = '{} &gt; {}'.format(winnerdesc, loserdesc)
+
+        template = Template(
+            '<li class="game">'
+            '<a href="{{ game.url }}" class="gameid">#{{ game.id }}</a>: '
+            '{{ playerdesc|safe }} by {{ game.data.win_condition }}'
+            '</li>'
+        )
+        return template.render(game=self, playerdesc=playerdesc)
 
 
 def create_tables():
