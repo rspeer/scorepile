@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{title | default('Game list')}}{% endblock title %}
+
+{% block body %}
+    <ul class="gamelist">
+    {% for game in games %}
+        <li class="game">
+           <a href="{{ game.url }}">Game #{{ game.id }}</a> 
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock body %}
