@@ -10,10 +10,20 @@ setup(
     platforms='any',
     description='Analyzes, searches, and hosts Innovation game logs',
     packages=['scorepile'],
-    install_requires=['beautifulsoup4', 'bottle', 'SQLAlchemy'],
+    install_requires=[
+        'beautifulsoup4', 'bottle', 'SQLAlchemy', 'Jinja2',
+        'psycopg2', 'pytz'
+    ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
     ]
 )
 
+try:
+    import html5lib
+except ImportError:
+    print()
+    print("You also need to install html5lib to parse games.")
+    print("Get it from: https://github.com/puzzlet/python3-html5lib")
+    print("(git clone https://github.com/puzzlet/python3-html5lib.git)")
