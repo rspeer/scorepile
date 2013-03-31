@@ -5,6 +5,7 @@ import pytz
 # During the DST transition when this is ambiguous, the timestamps are
 # ambiguous too. So let's standardize on using PT throughout scorepile.
 PT = pytz.timezone('America/Los_Angeles')
+UTC = pytz.timezone('UTC')
 
 
 def midnight_before(dt):
@@ -17,7 +18,7 @@ def midnight_after(dt):
 
 def friendly_date(dt):
     if dt.tzinfo is None:
-        dt = PT.localize(dt)
+        dt = UTC.localize(dt).astimezone(PT)
     now = datetime.now(PT)
     diff = dt - midnight_before(now)
     days = diff.days
@@ -35,7 +36,7 @@ def friendly_date(dt):
 
 def friendly_time(dt):
     if dt.tzinfo is None:
-        dt = PT.localize(dt)
+        dt = UTC.localize(dt).astimezone(PT)
 
     time = datetime.strftime(dt, '%I:%M %p').lstrip('0')
     tz = dt.tzname()
@@ -44,7 +45,7 @@ def friendly_time(dt):
 
 def full_date(dt):
     if dt.tzinfo is None:
-        dt = PT.localize(dt)
+        dt = UTC.localize(dt)
     now = datetime.now(PT)
     
     date_in_year = dt.strftime('%A, %B %d').replace(' 0', ' ')

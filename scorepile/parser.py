@@ -73,7 +73,7 @@ class GameParser:
                 }
 
     def handle_line(self, line):
-        tree = BeautifulSoup(close_images(line))
+        tree = BeautifulSoup(close_images(line), 'html.parser')
         items = tree.contents
 
         if isinstance(items[0], Tag) and items[0].name == 'hr':

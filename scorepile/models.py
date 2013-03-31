@@ -250,8 +250,9 @@ class Game(Base, DataMixin):
                 player = Player.get_by_iso_id(session, playerdata['iso_id'])
                 if player is None:
                     player = Player.from_parse_data(playerdata)
+                else:
+                    player.name = playerdata['name']
                 session.add(player)
-                LOG.info("Added {}".format(player))
             else:
                 player = None
 
@@ -264,7 +265,6 @@ class Game(Base, DataMixin):
 
         if commit:
             session.commit()
-            LOG.info("Committed.\n")
 
     def winners(self):
         return [player for player in self.players if player.winner == True]

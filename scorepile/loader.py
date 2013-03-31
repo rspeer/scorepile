@@ -13,7 +13,7 @@ def load_game(filename):
 
 def load_dir(path):
     path = path.rstrip('/')
-    for filename in os.listdir(path):
+    for filename in sorted(os.listdir(path)):
         if filename.endswith('.html'):
             print(filename)
             load_game(path + '/' + filename)

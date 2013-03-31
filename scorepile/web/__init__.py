@@ -44,7 +44,7 @@ class MiniSession:
 def main_page():
     dates = []
     now = datetime.now(PT)
-    for i in range(7):
+    for i in range(1, 8):
         backdate = now - timedelta(days=i)
         dates.append({
             'url': '/games/' + backdate.strftime('%Y/%m/%d'),
