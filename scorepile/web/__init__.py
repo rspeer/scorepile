@@ -1,16 +1,27 @@
-from bottle import route
+from bottle import route, abort
+from beaker.cache import CacheManager
+from beaker.util import parse_cache_config_options
 from datetime import datetime, timedelta
 import pytz
-from scorepile.models import Game, GamePlayer, Player
 from scorepile.db import Session
 from jinja2 import Environment, PackageLoader
+from scorepile.dateutils import full_date
+import os
 
+BASE_PATH = os.path.dirname(__file__) or '.'
 ENV = Environment(loader=PackageLoader('scorepile.web', 'templates'))
 TEMPLATES = {
+    'main_page': ENV.get_template('main_page.html'),
     'game_list': ENV.get_template('game_list.html')
 }
-
 PT = pytz.timezone('US/Pacific')
+
+CACHE_OPTS = {
+    'cache.type': 'file',
+    'cache.data_dir': BASE_PATH + '/cache/data',
+    'cache.lock_dir': BASE_PATH + '/cache/lock',
+}
+cache = CacheManager(**parse_cache_config_options(CACHE_OPTS))
 
 
 class MiniSession:
@@ -29,15 +40,15 @@ class MiniSession:
 
 
 @route('/')
-def not_ready():
-    return '<html>Not ready yet! Go help on <a href="http://github.com/rspeer/scorepile">GitHub</a>.</html>'
+def main_page():
+    dates = []
+    now = datetime.now(PT)
+    for i in range(7):
+        backdate = now - timedelta(days=i)
+        dates.append({
+            'url': '/games/' + backdate.strftime('%Y/%m/%d'),
+            'title': full_date(backdate)
+        })
 
-@route('/games')
-@route('/games/')
-def game_list():
-    with MiniSession() as session:
-        #yesterday = datetime.now(PT) - timedelta(days=1)
-        yesterday = datetime(2013, 3, 18)
-        games = Game.games_on_day(session, yesterday).all()
-        return TEMPLATES['game_list'].render(title="Yesterday's games ({})".format(len(games)), games=games)
-    
+    return TEMPLATES['main_page'].render(dates=dates)
+

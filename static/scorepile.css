@@ -1,0 +1,60 @@
+#content {
+    margin-top: 50px;
+}
+
+.gamelist .game {
+    margin-top: 1em;
+}
+
+a.gamelink {
+    text-decoration: none;
+    color: default;
+}
+
+.cardset-base {
+    background-color: #ccc;
+}
+
+.cardset-echoes {
+    background-color: #bcd;
+}
+
+.playerdetails {
+    background-color: #eee;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+}
+
+.gameheading {
+    position: relative;
+    left: -30px;
+}
+
+.player {
+    font-weight: bold;
+}
+
+.unreg {
+    color: #888;
+}
+
+.gameid {
+    font-weight: bold;
+    color: #246;
+}
+
+.timestamp {
+    float: right;
+}
+
+.dogmawin {
+    background-color: #357;
+    border-color: #357;
+}
+
+.score {
+    background-color: #8a8;
+    border-color: #8a8;
+}
+
+

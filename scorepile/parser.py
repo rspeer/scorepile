@@ -5,16 +5,16 @@ import re
 import time
 from datetime import datetime
 from pprint import pprint
+from scorepile.dateutils import PT
 
 # Enumerate some states
 (START, NEXT_PLAYER, HAND, ACHIEVE, SCORE, ICONS, DONE) = range(7)
 
-# Isotropic does everything in Pacific time; let's do the same
-PT = pytz.timezone('US/Pacific')
 
 def close_images(line):
     "Work around an html.parser bug."
     return re.sub(r'(<img (.*?)>)', r'\1</img>', line)
+
 
 class GameParser:
     """

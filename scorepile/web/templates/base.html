@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <title>{% block title %}{% endblock %} - scorepile.org</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/semistatic/log.css">
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
     <style>
       body {padding-top: 60px;}
     </style>
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="/semistatic/log.css">
     <link rel="stylesheet" href="/static/scorepile.css">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -19,7 +19,7 @@
 
   </head>
   <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -27,21 +27,22 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">scorepile.org</a>
+          <a class="brand" href="#">
+            <img src="/static/icons/crown.png"></img>
+            scorepile.org
+          </a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="/about">About</a></li>
-              <li><a href="http://github.com/rspeer/scorepile">GitHub</a></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/rspeer/scorepile">Contribute</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
-
-    <div id="content" class="container">    
+    
+    <div class="container" id="content">
       <h1>{% block heading %}{% endblock %}</h1>
-
       {% block content %}
       {% endblock %}
     </div>

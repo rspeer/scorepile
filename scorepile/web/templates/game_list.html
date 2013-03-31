@@ -3,9 +3,41 @@
 {% block heading %}{{title | default('Game list')}}{% endblock heading %}
 
 {% block content %}
-    <ul class="gamelist">
+    <div class="gamelist">
     {% for game in games %}
-        {{ game.html()|safe }}
+        <div class="game row cardset-{{ game.cardset }}">
+            <div class="span12">
+                {% set cond = game.data['win_condition'] %}
+                <div class="gameheading">
+                    <a href="{{ game.url }}"><img
+                       src="/static/icons/{{ game.icon_name() }}.png"
+                       title="{{ cond }}"
+                       class="win-icon"></a>
+                    {{ game.html()|safe }}
+                    <div class="timestamp">
+                        {{ game.friendly_timestamp() }}
+                    </div>
+                </div>
+                <div class="playerdetails row">
+                {% for gameplayer in game.players %}
+                    <div class="playerdetail span4">
+                        {% set pdata = gameplayer.data %}
+                        {{ gameplayer.html()|safe }}:
+                        {% for achievement in pdata['achievements'] %}
+                            <span class="age0">{{ achievement }}</span>
+                        {% endfor %}
+                        {% if cond == 'score' %}
+                            <span class="score age0">{{ pdata['score'] }}&nbsp;pts.</span>
+                        {% elif cond != 'achievements' and cond != 'attrition' %}
+                            {% if gameplayer.winner %}
+                                <span class="dogmawin age0">{{ cond }}</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
     {% endfor %}
-    </ul>
+    </div>
 {% endblock content %}

@@ -54,6 +54,10 @@ class Player(Base, DataMixin):
     
     jsondata = Column(String, default='{}')
 
+    @property
+    def iso_id_url(self):
+        return self.iso_id.replace('+', '-').replace('/', '_')
+        
     @staticmethod
     def from_parse_data(parsed):
         return Player(
@@ -65,6 +69,7 @@ class Player(Base, DataMixin):
     def get_by_iso_id(session, iso_id):
         if iso_id is None:
             return None
+        iso_id = iso_id.replace('-', '+').replace('_', '/')
 
         try:
             found = session.query(Player).filter(Player.iso_id == iso_id).one()
@@ -80,7 +85,7 @@ class Player(Base, DataMixin):
         except NoResultFound:
             return None
 
-    def played_games(self, session, day=None):
+    def played_games(self, session, day=None, limit=1000):
         played = (session.query(GamePlayer)
                          .join(GamePlayer.game)
                          .filter(GamePlayer.player == self)
@@ -91,6 +96,7 @@ class Player(Base, DataMixin):
             day_end = dateutils.midnight_after(day)
             played = (played.filter(Game.timestamp >= day_start)
                             .filter(Game.timestamp < day_end))
+        played = played.limit(limit)
         return [item.game for item in played]
     
     def __repr__(self):
@@ -98,7 +104,7 @@ class Player(Base, DataMixin):
 
     def html(self):
         template = Template(
-            '<a href="/player/id/{{ player.id }}" class="player">'
+            '<a href="/player/id/{{ player.iso_id_url }}" class="player">'
             '{{ player.name }}'
             '</a>'
         )
@@ -153,9 +159,10 @@ class GamePlayer(Base, DataMixin):
         return '<GamePlayer: {} in game #{})>'.format(self.player_name, self.game_id)
 
     def html(self):
+        "Render this player's name, including a possible link, as HTML."
         if self.player_id:
             template = Template(
-                '<a href="/player/id/{{ gplayer.player_id }}" class="reg player">'
+                '<a href="/player/id/{{ gplayer.player.iso_id_url }}" class="reg player">'
                 '{{ gplayer.player_name }}'
                 '</a>'
             )
@@ -191,19 +198,11 @@ class Game(Base, DataMixin):
 
     jsondata = Column(String, default='{}')
 
-    def winners(self):
-        return [player for player in self.players if player.winner == True]
+    def friendly_timestamp(self):
+        datestr = dateutils.friendly_date(self.timestamp)
+        timestr = dateutils.friendly_time(self.timestamp)
+        return datestr + ', ' + timestr
     
-    def losers(self):
-        return [player for player in self.players if player.winner == False]
-
-    def __repr__(self):
-        players = self.players
-        if players:
-            return '<Game #{}: {}>'.format(self.id, players)
-        else:
-            return '<Game #{}>'.format(self.id)
-
     @staticmethod
     def get(session, id):
         try:
@@ -221,7 +220,7 @@ class Game(Base, DataMixin):
                           .filter(Game.timestamp >= day_start)
                           .filter(Game.timestamp < day_end)
                           .filter(Game.nplayers >= 2)
-                          .order_by(Game.timestamp))
+                          .order_by(Game.id))
         return results
 
     @staticmethod
@@ -267,7 +266,38 @@ class Game(Base, DataMixin):
             session.commit()
             LOG.info("Committed.\n")
 
+    def winners(self):
+        return [player for player in self.players if player.winner == True]
+    
+    def losers(self):
+        return [player for player in self.players if player.winner == False]
+
+    def icon_name(self):
+        """
+        Associate a thematic icon with each win condition.
+        """
+        cond = self.data['win_condition']
+        if cond == 'attrition':
+            return 'castle'
+        elif cond == 'achievements':
+            return 'crown'
+        elif cond == 'score':
+            return 'leaf'
+        else:
+            return 'clock'
+
+    def grid_width(self):
+        return max(3, 12 // self.nplayers)
+
+    def __repr__(self):
+        players = self.players
+        if players:
+            return '<Game #{}: {}>'.format(self.id, players)
+        else:
+            return '<Game #{}>'.format(self.id)
+
     def html(self):
+        "Give this game an HTML-formatted title for use in templates."
         winnerdesc = ', '.join(p.html() for p in self.winners())
         loserdesc = ', '.join(p.html() for p in self.losers())
         if len(self.losers()) == 0:
@@ -276,10 +306,9 @@ class Game(Base, DataMixin):
             playerdesc = '{} &gt; {}'.format(winnerdesc, loserdesc)
 
         template = Template(
-            '<li class="game">'
             '<a href="{{ game.url }}" class="gameid">#{{ game.id }}</a>: '
-            '{{ playerdesc|safe }} by {{ game.data.win_condition }}'
-            '</li>'
+            '{{ playerdesc|safe }} by '
+            '<span class="condition">{{ game.data.win_condition }}</span>'
         )
         return template.render(game=self, playerdesc=playerdesc)
 

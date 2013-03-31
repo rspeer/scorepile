@@ -11,7 +11,7 @@ setup(
     description='Analyzes, searches, and hosts Innovation game logs',
     packages=['scorepile'],
     install_requires=[
-        'beautifulsoup4', 'bottle', 'SQLAlchemy', 'Jinja2',
+        'beautifulsoup4', 'bottle', 'SQLAlchemy', 'Jinja2', 'beaker',
         'psycopg2', 'pytz'
     ],
     classifiers=[

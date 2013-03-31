@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Innovation archives{% endblock title %}
+{% block heading %}Welcome to scorepile.org{% endblock %}
+
+{% block content %}
+<p>This site stores all the game logs from
+<a href="http://innovation.isotropic.org">innovation.isotropic.org</a>,
+an online version of Carl Chudyk's card game Innovation.</p>
+
+<p>The site can always use more features and more help with design.
+If you would like to help, you can contribute to the project on
+<a href="http://github.com/rspeer/scorepile">GitHub</a>. You can
+also use the GitHub page to
+<a href="https://github.com/rspeer/scorepile/issues">report a bug</a>.
+</p>
+
+<p>scorepile.org is maintained by Rob Speer
+(<a href="http://github.com/rspeer/">rspeer</a>).</p>
+
+<div class="searcharea well">
+    <h2>Look up a player</h2>
+    <p>Type a player name to see all the games they have played.</p>
+    <form class="form-search" action="/search" method="GET">
+        <div class="input-append">
+            <input type="text" class="span2 search-query"
+                   placeholder="Player name">
+            <button type="submit" class="btn">Search</button>
+        </div>
+    </form>
+
+    <h2>Games by date</h2>
+    <p>These pages list the games played in the last week. New game logs
+    become available at midnight Pacific Time, when Isotropic updates its
+    archives.</p>
+    <ul>
+    {% for date in dates %}
+        <li>
+            <a href="{{ date.url }}">{{ date.title }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

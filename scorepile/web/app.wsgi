@@ -7,5 +7,6 @@ import os
 os.chdir(os.path.dirname(__file__))
 import bottle
 from scorepile import web
+from scorepile.web import game_list
 application = bottle.default_app()
 
