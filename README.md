@@ -1,9 +1,9 @@
 # scorepile.org - hosts and analyzes game logs from innovation.isotropic.org
 
-I'm working on making CouncilRoom for Innovation.
+scorepile.org is an archive of Innovation games played on
+innovation.isotropic.org.
 
-You found it pretty early. That's awesome. Do you want to help? Here are some
-things that could be done:
+Do you want to help? Here are some things that could be done:
 
 - Develop the parser
 - Come up with ways to extract useful statistics from games
@@ -32,7 +32,7 @@ I use Python 3 because:
 I use Bottle as the web framework because it's simple and it's known to have
 good Python 3 support.
 
-scorepile.org redirects to innovation.scorepile.org so that:
+scorepile.org is equivalent to innovation.scorepile.org so that:
 
 - You can just change "isotropic" to "scorepile" in a game log URL and get
   scorepile's copy of it
