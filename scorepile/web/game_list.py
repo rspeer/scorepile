@@ -72,5 +72,6 @@ def game_list_for_player(player):
     title = "Player: {}".format(player.name)
     with MiniSession() as session:
         games = player.played_games(session)
-        return TEMPLATES['game_list'].render(title=title, games=games)
+        return TEMPLATES['game_list'].render(title=title, games=games,
+        curplayer=player.iso_id)
 

@@ -30,6 +30,13 @@ a.gamelink {
     background-color: #bcd;
 }
 
+.cardset-echoes .cardset-name {
+    background-color: #6889ec; color: white; padding: 0px 0.4ex;
+    margin-left: 1em;
+	border-left: 1px solid #95acf1; border-top: 1px solid #95acf1;
+	border-right: 1px solid #3e528d; border-bottom: 1px solid #3e528d;
+}
+
 .playerdetails {
     background-color: #eee;
 }
@@ -37,6 +44,18 @@ a.gamelink {
 .playerdetail {
     padding-top: 0.3em;
     padding-bottom: 0.3em;
+}
+
+.playerdetail .player {
+    margin-left: 0.5em;
+}
+
+.winner {
+    background-color: #dfd;
+}
+
+.loser {
+    background-color: #fdd;
 }
 
 .gameheading {

@@ -22,9 +22,13 @@ class DataMixin:
     inherit it, but that would constitute using OOP to add confusion.
     """
     def _get_data(self):
+        if hasattr(self, '_data_cache'):
+            return self._data_cache
         return json.loads(self.jsondata)
 
     def _set_data(self, value):
+        if hasattr(self, '_data_cache'):
+            del self._data_cache
         self.jsondata = json.dumps(value)
 
     data = property(_get_data, _set_data)
@@ -158,20 +162,6 @@ class GamePlayer(Base, DataMixin):
     def __repr__(self):
         return '<GamePlayer: {} in game #{})>'.format(self.player_name, self.game_id)
 
-    def html(self):
-        "Render this player's name, including a possible link, as HTML."
-        if self.player_id:
-            template = Template(
-                '<a href="/player/id/{{ gplayer.player.iso_id_url }}" class="reg player">'
-                '{{ gplayer.player_name }}'
-                '</a>'
-            )
-        else:
-            template = Template(
-                '<span class="unreg player">{{ gplayer.player_name }}</span>'
-            )
-        return template.render(gplayer=self)
-
 
 class Game(Base, DataMixin):
     __tablename__ = 'games'
@@ -216,7 +206,6 @@ class Game(Base, DataMixin):
         day_start = dateutils.midnight_before(timestamp)
         day_end = dateutils.midnight_after(timestamp)
         results = (session.query(Game)
-                          .options(joinedload(Game.players))
                           .filter(Game.timestamp >= day_start)
                           .filter(Game.timestamp < day_end)
                           .filter(Game.nplayers >= 2)
@@ -232,7 +221,11 @@ class Game(Base, DataMixin):
             timestamp=parsed['timestamp'],
             cardset=parsed['cardset']
         )
-        game.data = {'win_condition': parsed['win_condition']}
+        players = sorted(parsed['players'].items())
+        game.data = {
+            'win_condition': parsed['win_condition'],
+            'players': [player for key, player in players]
+        }
         return game
 
     @staticmethod
@@ -241,6 +234,7 @@ class Game(Base, DataMixin):
         if existing:
             game = existing
             LOG.warn('Found existing {}'.format(game))
+            game.data = Game.from_parse_data(parsed).data
         else:
             game = Game.from_parse_data(parsed)
 
@@ -267,10 +261,10 @@ class Game(Base, DataMixin):
             session.commit()
 
     def winners(self):
-        return [player for player in self.players if player.winner == True]
+        return [player for player in self.data['players'] if player['winner']]
     
     def losers(self):
-        return [player for player in self.players if player.winner == False]
+        return [player for player in self.data['players'] if not player['winner']]
 
     def icon_name(self):
         """
@@ -290,25 +284,58 @@ class Game(Base, DataMixin):
         return max(3, 12 // self.nplayers)
 
     def __repr__(self):
-        players = self.players
-        if players:
+        if self.data.get('players'):
+            players = [player['name'] for player in self.data['players']]
             return '<Game #{}: {}>'.format(self.id, players)
         else:
             return '<Game #{}>'.format(self.id)
 
+    def gameplayer_html(self, gplayer):
+        """
+        Each game stores a list of dictionaries with cached information about
+        the state of each player. We use these instead of GamePlayer objects so
+        we don't have to load them from the DB by the thousands.
+
+        This function gets an HTML representation of the player's name, with
+        a possible link to their page.
+        """
+        if gplayer.get('iso_id'):
+            gplayer["iso_id_url"] = gplayer['iso_id'].replace('+', '-').replace('/', '_')
+            template = Template(
+                '<a href="/player/id/{{ gplayer["iso_id_url"] }}" class="reg player">'
+                '{{ gplayer["name"] }}'
+                '</a>'
+            )
+        else:
+            template = Template(
+                '<span class="unreg player">{{ gplayer["name"] }}</span>'
+            )
+        return template.render(gplayer=gplayer)
+
+    def ordered_players(self):
+        players = self.data['players']
+        players.sort(key=lambda x: x['winner'], reverse=True)
+        return players
+
     def html(self):
         "Give this game an HTML-formatted title for use in templates."
-        winnerdesc = ', '.join(p.html() for p in self.winners())
-        loserdesc = ', '.join(p.html() for p in self.losers())
+        winnerdesc = ', '.join(self.gameplayer_html(p) for p in self.winners())
+        loserdesc = ', '.join(self.gameplayer_html(p) for p in self.losers())
         if len(self.losers()) == 0:
-            playerdesc = ' = '.join(p.html() for p in self.players)
+            playerdesc = ' = '.join(
+                self.gameplayer_html(p)
+                for p in self.data['players']
+            )
         else:
             playerdesc = '{} &gt; {}'.format(winnerdesc, loserdesc)
 
         template = Template(
             '<a href="{{ game.url }}" class="gameid">#{{ game.id }}</a>: '
             '{{ playerdesc|safe }} by '
-            '<span class="condition">{{ game.data.win_condition }}</span>'
+            '<span class="condition">{{ game.data.win_condition }}</span> '
+            '{% if game.cardset != "base" %}'
+            '<span class="cardset-name">{{ game.cardset.title() }}</span>'
+            '{% endif %}'
         )
         return template.render(game=self, playerdesc=playerdesc)
 

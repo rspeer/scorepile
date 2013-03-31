@@ -19,17 +19,20 @@
                     </div>
                 </div>
                 <div class="playerdetails row">
-                {% for gameplayer in game.players %}
-                    <div class="playerdetail span4">
-                        {% set pdata = gameplayer.data %}
-                        {{ gameplayer.html()|safe }}:
-                        {% for achievement in pdata['achievements'] %}
+                {% for gameplayer in game.ordered_players() %}
+                    <div class="playerdetail span4
+                    {%- if curplayer and curplayer == gameplayer['iso_id'] -%}
+                      {%- if gameplayer['winner'] %} winner {% else %} loser {%
+                      endif -%}
+                    {%- endif %}">
+                        {{ game.gameplayer_html(gameplayer)|safe }}:
+                        {% for achievement in gameplayer['data']['achievements'] %}
                             <span class="age0">{{ achievement }}</span>
                         {% endfor %}
                         {% if cond == 'score' %}
-                            <span class="score age0">{{ pdata['score'] }}&nbsp;pts.</span>
+                            <span class="score age0">{{ gameplayer['data']['score'] }}&nbsp;pts.</span>
                         {% elif cond != 'achievements' and cond != 'attrition' %}
-                            {% if gameplayer.winner %}
+                            {% if gameplayer['winner'] %}
                                 <span class="dogmawin age0">{{ cond }}</span>
                             {% endif %}
                         {% endif %}
