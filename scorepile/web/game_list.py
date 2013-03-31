@@ -1,4 +1,4 @@
-from bottle import route, abort
+from bottle import route, abort, request
 from scorepile.web import PT, TEMPLATES, cache, MiniSession
 from datetime import datetime, timedelta
 from scorepile.models import Game, Player
@@ -52,6 +52,20 @@ def player_by_name(name):
         else:
             return game_list_for_player(player)
         
+
+@route('/search')
+def player_search():
+    name = request.params.get('player')
+    if not name:
+        return TEMPLATES['no_results'].render(name='')
+    else:
+        with MiniSession() as session:
+            player = Player.get_by_name(session, name)
+            if player is None:
+                return TEMPLATES['no_results'].render(name=name)
+            else:
+                return game_list_for_player(player)
+
 
 @cache.cache('games_by_player')
 def game_list_for_player(player):

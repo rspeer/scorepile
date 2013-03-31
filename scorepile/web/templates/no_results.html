@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}No results{% endblock title %}
+{% block heading %}{% endblock heading %}
+{% block content %}
+{% if name %}
+    <p>
+    I don't have any logs for a player named <strong>{{ name }}</strong>.
+    </p>
+<p>Keep in mind:</p>
+<ul>
+    <li>Only registered players are searchable.</li>
+    <li>You have to match the capitalization of their name. (Working on
+    it.)</li>
+    <li>If the player has changed their name, you should search by their
+    more recent name.</li>
+</ul>
+{% endif %}
+<div class="searcharea well">
+    <p>Type a player name to see all the games they have played.</p>
+    <form class="form-search" action="/search" method="GET">
+        <div class="input-append">
+            <input type="text" class="span2 search-query" name="player"
+                   placeholder="Player name">
+            <button type="submit" class="btn">Search</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

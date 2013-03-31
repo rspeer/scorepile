@@ -12,7 +12,8 @@ BASE_PATH = os.path.dirname(__file__) or '.'
 ENV = Environment(loader=PackageLoader('scorepile.web', 'templates'))
 TEMPLATES = {
     'main_page': ENV.get_template('main_page.html'),
-    'game_list': ENV.get_template('game_list.html')
+    'game_list': ENV.get_template('game_list.html'),
+    'no_results': ENV.get_template('no_results.html')
 }
 PT = pytz.timezone('US/Pacific')
 
