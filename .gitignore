@@ -6,3 +6,4 @@ data/innovation.isotropic.org
 *~
 db_config.py
 __pycache__
+scorepile/web/cache
