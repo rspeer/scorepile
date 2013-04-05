@@ -84,7 +84,10 @@ class Player(Base, DataMixin):
     @staticmethod
     def get_by_name(session, name):
         try:
-            found = session.query(Player).filter(Player.name == name).one()
+            found = (session.query(Player)
+                            .filter(Player.name == name)
+                            .order_by(desc(Player.id))
+                            .first())
             return found
         except NoResultFound:
             return None
@@ -209,7 +212,7 @@ class Game(Base, DataMixin):
                           .filter(Game.timestamp >= day_start)
                           .filter(Game.timestamp < day_end)
                           .filter(Game.nplayers >= 2)
-                          .order_by(Game.id))
+                          .order_by(Game.timestamp))
         return results
 
     @staticmethod
@@ -234,7 +237,12 @@ class Game(Base, DataMixin):
         if existing:
             game = existing
             LOG.warn('Found existing {}'.format(game))
-            game.data = Game.from_parse_data(parsed).data
+            newgame = Game.from_parse_data(parsed)
+            game.data = newgame.data
+            game.timestamp = newgame.timestamp.replace(tzinfo=None)
+            game.nplayers = newgame.nplayers
+            game.url = newgame.url
+            game.cardset = newgame.cardset
         else:
             game = Game.from_parse_data(parsed)
 

@@ -67,7 +67,7 @@ def player_search():
                 return game_list_for_player(player)
 
 
-@cache.cache('games_by_player')
+@cache.cache('games_by_player', expire=3600)
 def game_list_for_player(player):
     title = "Player: {}".format(player.name)
     with MiniSession() as session:
