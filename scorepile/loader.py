@@ -12,11 +12,17 @@ def load_game(filename):
     game = Game.create(session, parsed)
 
 def load_dir(path):
+    """
+    Recursively finds the game logs in a directory, and adds them to the
+    database.
+    """
     path = path.rstrip('/')
     for filename in sorted(os.listdir(path)):
         if filename.endswith('.html'):
             print(filename)
             load_game(path + '/' + filename)
+        elif os.path.isdir(filename):
+            load_dir(filename)
 
 # This file can be run as a script from the command line.
 if __name__ == '__main__':
