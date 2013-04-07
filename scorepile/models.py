@@ -177,7 +177,7 @@ class Game(Base, DataMixin):
     cardset = Column(String)
 
     # What's the relative URL of the game log?
-    url = Column(String)
+    url = Column(String, index=True, unique=True)
 
     # When was the game played?
     timestamp = Column(DateTime, index=True)
@@ -205,6 +205,14 @@ class Game(Base, DataMixin):
             return None
 
     @staticmethod
+    def get_by_url(session, url):
+        try:
+            found = session.query(Game).filter(Game.url == url).one()
+            return found
+        except NoResultFound:
+            return None
+
+    @staticmethod
     def games_on_day(session, timestamp):
         day_start = dateutils.midnight_before(timestamp)
         day_end = dateutils.midnight_after(timestamp)
@@ -218,7 +226,6 @@ class Game(Base, DataMixin):
     @staticmethod
     def from_parse_data(parsed):
         game = Game(
-            id=parsed['game_id'],
             nplayers=parsed['nplayers'],
             url=parsed['url'],
             timestamp=parsed['timestamp'],
@@ -233,8 +240,10 @@ class Game(Base, DataMixin):
 
     @staticmethod
     def create(session, parsed, commit=True):
-        existing = Game.get(session, parsed['game_id'])
+        existing = Game.get_by_url(session, parsed['url'])
         if existing:
+            # Update an existing game in place, so we don't have to change
+            # all references to it
             game = existing
             LOG.warn('Found existing {}'.format(game))
             newgame = Game.from_parse_data(parsed)
