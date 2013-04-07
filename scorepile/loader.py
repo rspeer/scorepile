@@ -18,11 +18,13 @@ def load_dir(path):
     """
     path = path.rstrip('/')
     for filename in sorted(os.listdir(path)):
+        fullpath = path + '/' + filename
         if filename.endswith('.html'):
-            print(filename)
-            load_game(path + '/' + filename)
-        elif os.path.isdir(filename):
-            load_dir(filename)
+            print('  ' + filename)
+            load_game(fullpath)
+        elif os.path.isdir(fullpath):
+            print(fullpath)
+            load_dir(fullpath)
 
 # This file can be run as a script from the command line.
 if __name__ == '__main__':

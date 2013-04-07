@@ -5,7 +5,7 @@ from sqlalchemy import (Column, String, Integer, Boolean, DateTime,
                         ForeignKey, desc)
 import json
 import logging
-from . import dateutils
+from scorepile import dateutils
 from jinja2 import Template
 
 logging.basicConfig(level=logging.INFO)
